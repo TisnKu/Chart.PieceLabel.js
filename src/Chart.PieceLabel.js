@@ -11,6 +11,14 @@
     this.drawDataset = this.drawDataset.bind(this);
   }
 
+  function fillMultiLineText(ctx, text, x, y) {
+    const lineHeight = ctx.measureText('M').width * 1.2;
+    text.split('\n').forEach(function (line) {
+      ctx.fillText(line, x, y);
+      y += lineHeight;
+    })
+  }
+
   PieceLabel.prototype.beforeDatasetsUpdate = function (chartInstance) {
     if (this.parseOptions(chartInstance) && this.position === 'outside') {
       var padding = this.fontSize * 1.5 + 2;
@@ -76,7 +84,7 @@
       ctx.beginPath();
       ctx.font = Chart.helpers.fontString(this.fontSize, this.fontStyle, this.fontFamily);
       var position, innerRadius, arcOffset;
-      if (this.position === 'outside' || 
+      if (this.position === 'outside' ||
         this.position === 'border' && chartInstance.config.type === 'pie') {
         innerRadius = view.outerRadius / 2;
         var rangeFromCentre, offset = this.fontSize + 2,
@@ -102,7 +110,7 @@
         innerRadius = view.innerRadius;
         position = element.tooltipPosition();
       }
-      
+
       var fontColor = this.fontColor;
       if (typeof this.fontColor !== 'string') {
         fontColor = this.fontColor[i] || this.options.defaultFontColor;
@@ -132,7 +140,7 @@
           ctx.fillStyle = fontColor;
           ctx.textBaseline = 'top';
           ctx.textAlign = 'center';
-          ctx.fillText(text, position.x, position.y - this.fontSize / 2);
+          fillMultiLineText(ctx, text, position.x, position.y - this.fontSize / 2);
         }
       }
       ctx.restore();
@@ -165,7 +173,7 @@
 
   PieceLabel.prototype.checkTextBound = function (left, right, top, bottom) {
     var labelBounds = this.labelBounds;
-    for (var i = 0;i < labelBounds.length;++i) {
+    for (var i = 0; i < labelBounds.length; ++i) {
       var bound = labelBounds[i];
       var potins = [
         [left, top],
@@ -173,7 +181,7 @@
         [right, top],
         [right, bottom]
       ];
-      for (var j = 0;j < potins.length;++j) {
+      for (var j = 0; j < potins.length; ++j) {
         var x = potins[j][0];
         var y = potins[j][1];
         if (x >= bound.left && x <= bound.right && y >= bound.top && y <= bound.bottom) {
@@ -186,7 +194,7 @@
         [bound.right, bound.top],
         [bound.right, bound.bottom]
       ];
-      for (var j = 0;j < potins.length;++j) {
+      for (var j = 0; j < potins.length; ++j) {
         var x = potins[j][0];
         var y = potins[j][1];
         if (x >= left && x <= right && y >= top && y <= bottom) {
@@ -227,7 +235,7 @@
       mertrics = ctx.measureText(char);
       ctx.save();
       ctx.translate(0, -1 * radius);
-      ctx.fillText(char, 0, 0);
+      fillMultiLineText(ctx, char, 0, 0);
       ctx.restore();
       ctx.rotate(mertrics.width / radius);
     }
@@ -235,7 +243,7 @@
   };
 
   Chart.pluginService.register({
-    beforeInit: function(chartInstance) {
+    beforeInit: function (chartInstance) {
       chartInstance.pieceLabel = new PieceLabel();
     },
     beforeDatasetsUpdate: function (chartInstance) {
