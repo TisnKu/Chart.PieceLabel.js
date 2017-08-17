@@ -21,7 +21,7 @@
 
   PieceLabel.prototype.beforeDatasetsUpdate = function (chartInstance) {
     if (this.parseOptions(chartInstance) && this.position === 'outside') {
-      var padding = this.fontSize * 1.5 + 10;
+      var padding = this.fontSize * 1.5 + 2;
       chartInstance.chartArea.top += padding;
       chartInstance.chartArea.bottom -= padding;
     }
